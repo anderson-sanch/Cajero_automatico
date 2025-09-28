@@ -31,8 +31,7 @@ namespace Cajero_automatico
                         break;
                     
                     case "2":
-                        Console.WriteLine("\n[Opcion Registrar usuario todavia no implementada]");
-                        Console.ReadKey();
+                        RegistrarUsuario();
                         break;
                     case "3":
                         Console.WriteLine("\n[Saliendo del sistema]");
@@ -45,6 +44,30 @@ namespace Cajero_automatico
                 }
             }
 
+        }
+        static List<Usuario> usuarios = new List<Usuario>();
+
+        static void RegistrarUsuario() 
+        {
+            Console.Clear();
+            Console.WriteLine("=== Registro de Usuario ===");
+
+            Console.Write("Nombre completo: ");
+            string nombre = Console.ReadLine();
+
+            Console.Write("Documento: ");
+            string documento = Console.ReadLine();
+
+            Console.Write("Clave: ");
+            string clave = Console.ReadLine();
+
+            Usuario nuevo = new Usuario(nombre, documento, clave);
+
+            usuarios.Add(nuevo);
+
+            Console.WriteLine("\nUsuario registrado con éxito.");
+            Console.WriteLine("Presione una tecla para continuar...");
+            Console.ReadKey();
         }
     }
 }
