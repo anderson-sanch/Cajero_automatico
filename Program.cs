@@ -17,8 +17,8 @@ namespace Cajero_automatico
 
             bool salir = false;
 
-            while (!salir) 
-            { 
+            while (!salir)
+            {
                 Console.Clear();
                 Console.WriteLine(" === CAJERO AUTOMATICO === ");
                 Console.WriteLine("1. Iniciar sesión");
@@ -28,13 +28,12 @@ namespace Cajero_automatico
 
                 string opcion = Console.ReadLine();
 
-                switch (opcion) 
+                switch (opcion)
                 {
                     case "1":
-                        Console.WriteLine("\n[Opcion Iniciar sesión todavia no implementada]");
-                        Console.ReadKey();
+                        Iniciar_sesion();
                         break;
-                    
+
                     case "2":
                         Registrar_usuario();
                         break;
@@ -50,8 +49,7 @@ namespace Cajero_automatico
             }
 
         }
-
-        static void Registrar_usuario() 
+        static void Registrar_usuario()
         {
             Console.Clear();
             Console.WriteLine("=== Registro de Usuario ===");
@@ -76,5 +74,49 @@ namespace Cajero_automatico
             Console.WriteLine("Presione una tecla para continuar...");
             Console.ReadKey();
         }
+
+        static void Iniciar_sesion()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Inicio de Sesion ===");
+
+            Usuario encontrado = null;
+
+            while (encontrado == null)
+            {
+                Console.Write("Documento: ");
+                string documento = Console.ReadLine();
+
+                Console.Write("Clave: ");
+                string clave = Console.ReadLine();
+
+
+                foreach (var usuario in usuarios)
+                {
+                    if (usuario.Documento == documento && usuario.Clave == clave)
+                    {
+                        encontrado = usuario;
+                        break;
+                    }
+                }
+
+                if (encontrado == null)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"\n Credenciales incorrectas!");
+                    Console.WriteLine("\nPresione una tecla para continuar...");
+                    Console.ReadKey();
+                }
+
+
+            }
+
+            Console.Clear();
+            Console.WriteLine($"\n Bienvenido, {encontrado.Nombre}!");
+            Console.WriteLine($"\n Saldo actual, {encontrado.Saldo:C}!");
+            Console.WriteLine("\nPresione una tecla para continuar...");
+            Console.ReadKey();
+        }
+
     }
 }
