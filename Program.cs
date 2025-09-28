@@ -8,8 +8,13 @@ namespace Cajero_automatico
 {
     internal class Program
     {
+        static List<Usuario> usuarios = new List<Usuario>();
+
         static void Main(string[] args)
         {
+            //carga los posibles usuarios ya creados
+            usuarios = Administrador_archivos.Cargar_usuarios();
+
             bool salir = false;
 
             while (!salir) 
@@ -31,7 +36,7 @@ namespace Cajero_automatico
                         break;
                     
                     case "2":
-                        RegistrarUsuario();
+                        Registrar_usuario();
                         break;
                     case "3":
                         Console.WriteLine("\n[Saliendo del sistema]");
@@ -45,9 +50,8 @@ namespace Cajero_automatico
             }
 
         }
-        static List<Usuario> usuarios = new List<Usuario>();
 
-        static void RegistrarUsuario() 
+        static void Registrar_usuario() 
         {
             Console.Clear();
             Console.WriteLine("=== Registro de Usuario ===");
@@ -64,6 +68,9 @@ namespace Cajero_automatico
             Usuario nuevo = new Usuario(nombre, documento, clave);
 
             usuarios.Add(nuevo);
+
+            //guarda el usuario nuevo en el .txt al momento de ser creado
+            Administrador_archivos.Guardar_usuario(nuevo);
 
             Console.WriteLine("\nUsuario registrado con éxito.");
             Console.WriteLine("Presione una tecla para continuar...");
