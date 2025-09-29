@@ -114,8 +114,87 @@ namespace Cajero_automatico
             Console.Clear();
             Console.WriteLine($"\n Bienvenido, {encontrado.Nombre}!");
             Console.WriteLine($"\n Saldo actual, {encontrado.Saldo:C}!");
-            Console.WriteLine("\nPresione una tecla para continuar...");
+            Menu_usuario(encontrado);
             Console.ReadKey();
+        }
+
+        static void Menu_usuario(Usuario usuario)
+        {
+            bool salir = false;
+
+            while (!salir)
+            {
+                Console.Clear();
+                Console.WriteLine($"=== Menú de {usuario.Nombre} ===");
+                Console.WriteLine("1. Consultar saldo");
+                Console.WriteLine("2. Deposito dinero");
+                Console.WriteLine("3. Retirar dinero");
+                Console.WriteLine("4. Cerrar sesión");
+                Console.WriteLine("Seleccione una opción");
+
+                string opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                        Console.WriteLine($"\n Saldo actual : {usuario.Saldo:C}");
+                        Console.ReadKey();
+                        break;
+                    case "2":
+                        Console.Write("\nIngrese monto a deposito: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal deposito) && deposito > 0)
+                        {
+                            usuario.Saldo += deposito;
+
+                            //Actualizamos el archivo de usuarios 
+                            Administrador_archivos.Actualizar_usuario(usuario);
+
+                            Console.WriteLine($"Deposito exitoso. Nuevo saldo: {usuario.Saldo:C}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Monto invalido");
+                        }
+                        Console.ReadKey();
+                        break;
+
+                    case "3": // retirar
+                        Console.Write("\nIngrese monto a retirar: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal retiro) && retiro > 0)
+                        {
+                            if (usuario.Saldo >= retiro)
+                            {
+                                usuario.Saldo -= retiro;
+
+                                //Actualizamos 
+                                Administrador_archivos.Actualizar_usuario(usuario);
+
+                                Console.WriteLine($"Retiro exitoso. Nuevo saldo: {usuario.Saldo:C}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Saldo insuficiente");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nMonto invalido");
+                        }
+                        Console.ReadKey();
+                        break;
+
+                    case "4":
+                        salir = true;
+                        Console.WriteLine("\nCerrando sesión");
+                        Console.ReadKey();
+                        break;
+
+                    default:
+                        Console.WriteLine("\n Opcion no valida");
+                        Console.ReadKey();
+                        break;
+                }
+            }
         }
 
     }
