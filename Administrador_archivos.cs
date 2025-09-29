@@ -16,17 +16,18 @@ namespace Cajero_automatico
         //Guarda el usuario nuevo
         public static void Guardar_usuario(Usuario usuario)
         {
-            using (StreamWriter sw = new StreamWriter(Ruta_usuarios, true)) 
+            using (StreamWriter sw = new StreamWriter(Ruta_usuarios, true))
             {
                 sw.WriteLine($"{usuario.Nombre};{usuario.Documento};{usuario.Clave};{usuario.Saldo}");
             }
         }
         //Carga los usuarios desde el archivo .txt
         public static List<Usuario> Cargar_usuarios()
-        { 
+        {
             List<Usuario> usuarios = new List<Usuario>();
 
-            if (!File.Exists(Ruta_usuarios)) {
+            if (!File.Exists(Ruta_usuarios))
+            {
                 return usuarios;
             }
 
@@ -35,8 +36,8 @@ namespace Cajero_automatico
             foreach (string linea in lineas)
             {
                 string[] partes = linea.Split(';');
-                if (partes.Length == 4) 
-                { 
+                if (partes.Length == 4)
+                {
                     string nombre = partes[0];
                     string documento = partes[1];
                     string clave = partes[2];
@@ -46,6 +47,31 @@ namespace Cajero_automatico
                 }
             }
             return usuarios;
+        }
+
+        public static void Actualizar_usuario(Usuario Usuario_actualizado)
+        {
+            //cargamos los usuarios 
+            List<Usuario> usuarios = Cargar_usuarios();
+
+            for (int i = 0; i < usuarios.Count; i++)
+            {
+                if (usuarios[i].Documento == Usuario_actualizado.Documento)
+                {
+                    usuarios[i] = Usuario_actualizado;
+                    break;
+                }
+            }
+
+            //reescribimos todo el arcivo txt
+
+            using (StreamWriter sw = new StreamWriter(Ruta_usuarios, false))
+            {
+                foreach (var Usuario_reescrito in usuarios)
+                { 
+                    sw.WriteLine($"{Usuario_reescrito.Nombre};{Usuario_reescrito.Documento};{Usuario_reescrito.Clave};{Usuario_reescrito.Saldo}");
+                }
+            }
         }
     }
 }
