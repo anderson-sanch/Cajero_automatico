@@ -19,6 +19,7 @@ namespace Cajero_automatico
             Documento = documento;
             Clave = clave;
             Saldo = saldo;
+
         }
     }
 }

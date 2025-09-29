@@ -39,7 +39,7 @@ namespace Cajero_automatico
                         break;
                     case "3":
                         Console.WriteLine("\n[Saliendo del sistema]");
-                        Console.ReadKey();
+                        Environment.Exit(0);
                         break;
                     default:
                         Console.WriteLine("\n Opcion no válida.");
@@ -129,7 +129,9 @@ namespace Cajero_automatico
                 Console.WriteLine("1. Consultar saldo");
                 Console.WriteLine("2. Deposito dinero");
                 Console.WriteLine("3. Retirar dinero");
-                Console.WriteLine("4. Cerrar sesión");
+                Console.WriteLine("4. Mostrar movimientos");
+                Console.WriteLine("5. Cambiar clave");
+                Console.WriteLine("6. Cerrar sesión");
                 Console.WriteLine("Seleccione una opción");
 
                 string opcion = Console.ReadLine();
@@ -148,8 +150,9 @@ namespace Cajero_automatico
 
                             //Actualizamos el archivo de usuarios 
                             Administrador_archivos.Actualizar_usuario(usuario);
+                            Administrador_archivos.Guardar_movimientos(new Movimiento(usuario.Documento, "Deposito", deposito));
 
-                            Console.WriteLine($"Deposito exitoso. Nuevo saldo: {usuario.Saldo:C}");
+                            Console.WriteLine($"Deposito exitoso de {usuario.Nombre}. Nuevo saldo: {usuario.Saldo:C}");
                         }
                         else
                         {
@@ -168,6 +171,7 @@ namespace Cajero_automatico
 
                                 //Actualizamos 
                                 Administrador_archivos.Actualizar_usuario(usuario);
+                                Administrador_archivos.Guardar_movimientos(new Movimiento(usuario.Documento, "Retiro", retiro));
 
                                 Console.WriteLine($"Retiro exitoso. Nuevo saldo: {usuario.Saldo:C}");
                             }
@@ -184,6 +188,41 @@ namespace Cajero_automatico
                         break;
 
                     case "4":
+                        var ultimos = Administrador_archivos.Cargar_movimientos_usuario(usuario.Documento);
+                        Console.WriteLine("\n === Ultimos 5 movimientos ===");
+                        foreach (var movi in ultimos)
+                        {
+                            Console.WriteLine($"{movi.Fecha}: {movi.Tipo} de {movi.Monto:C}");
+                        }
+
+                        if (ultimos.Count == 0) Console.WriteLine("No hay movimientos registrados");
+                        Console.ReadKey();
+                        break;
+
+                    case "5":
+                        Console.Write("\n Ingrese su clave actual: ");
+                        string Clave_actual = Console.ReadLine();
+
+                        if (Clave_actual == usuario.Clave)
+                        {
+                            Console.Write("Ingrese la nueva clave: ");
+                            string Nueva_clave = Console.ReadLine();
+                            usuario.Clave = Nueva_clave;
+
+                            Administrador_archivos.Actualizar_usuario(usuario);
+
+                            Console.WriteLine("Clave actualizada con exito.");
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Las claves no coinciden");
+
+                        }
+                        Console.ReadKey();
+                        break;
+
+                    case "6":
                         salir = true;
                         Console.WriteLine("\nCerrando sesión");
                         Console.ReadKey();

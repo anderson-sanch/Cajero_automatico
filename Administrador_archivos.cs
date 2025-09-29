@@ -13,6 +13,9 @@ namespace Cajero_automatico
         //creamos una ruta relativa al archivo
         private static string Ruta_usuarios = "usuarios.txt";
 
+        //creamos una ruta relativa al archivo de movimientos
+        private static string Ruta_movimientos = "movimientos.txt";
+
         //Guarda el usuario nuevo
         public static void Guardar_usuario(Usuario usuario)
         {
@@ -68,10 +71,52 @@ namespace Cajero_automatico
             using (StreamWriter sw = new StreamWriter(Ruta_usuarios, false))
             {
                 foreach (var Usuario_reescrito in usuarios)
-                { 
+                {
                     sw.WriteLine($"{Usuario_reescrito.Nombre};{Usuario_reescrito.Documento};{Usuario_reescrito.Clave};{Usuario_reescrito.Saldo}");
+
                 }
             }
+        }
+
+        public static void Guardar_movimientos(Movimiento mov)
+        {
+            using (StreamWriter sw = new StreamWriter(Ruta_movimientos, true))
+            {
+                sw.WriteLine($"{mov.Documento};{mov.Tipo};{mov.Monto};{mov.Fecha}");
+            }
+        }
+
+        public static List<Movimiento> Cargar_movimiento()
+        {
+            List<Movimiento> movimientos = new List<Movimiento>();
+
+            if (!File.Exists(Ruta_movimientos))
+            {
+                return movimientos;
+            }
+
+            string[] lineas = File.ReadAllLines(Ruta_movimientos);
+            foreach (string linea in lineas)
+            {
+                string[] partes = linea.Split(';');
+                if (partes.Length == 4)
+                {
+                    string documento = partes[0];
+                    string tipo = partes[1];
+                    decimal monto = decimal.Parse(partes[2]);
+                    DateTime fecha = DateTime.Parse(partes[3]);
+
+                    movimientos.Add(new Movimiento(documento, tipo, monto) { Fecha = fecha });
+                }
+            }
+            return movimientos;
+        }
+
+        public static List<Movimiento> Cargar_movimientos_usuario(string documento) 
+        {
+            List<Movimiento> todos = Cargar_movimiento();
+
+            return todos.Where(m => m.Documento == documento).OrderByDescending(m => m.Fecha).Take(5).ToList();
         }
     }
 }
