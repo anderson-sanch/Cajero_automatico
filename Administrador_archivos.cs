@@ -111,5 +111,12 @@ namespace Cajero_automatico
             }
             return movimientos;
         }
+
+        public static List<Movimiento> Cargar_movimientos_usuario(string documento) 
+        {
+            List<Movimiento> todos = Cargar_movimiento();
+
+            return todos.Where(m => m.Documento == documento).OrderByDescending(m => m.Fecha).Take(5).ToList();
+        }
     }
 }
