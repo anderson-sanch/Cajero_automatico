@@ -148,8 +148,9 @@ namespace Cajero_automatico
 
                             //Actualizamos el archivo de usuarios 
                             Administrador_archivos.Actualizar_usuario(usuario);
+                            Administrador_archivos.Guardar_movimientos(new Movimiento(usuario.Documento, "Deposito", deposito)); 
 
-                            Console.WriteLine($"Deposito exitoso. Nuevo saldo: {usuario.Saldo:C}");
+                            Console.WriteLine($"Deposito exitoso de {usuario.Nombre}. Nuevo saldo: {usuario.Saldo:C}");
                         }
                         else
                         {
@@ -168,6 +169,7 @@ namespace Cajero_automatico
 
                                 //Actualizamos 
                                 Administrador_archivos.Actualizar_usuario(usuario);
+                                Administrador_archivos.Guardar_movimientos(new Movimiento(usuario.Documento, "Retiro", retiro));
 
                                 Console.WriteLine($"Retiro exitoso. Nuevo saldo: {usuario.Saldo:C}");
                             }
